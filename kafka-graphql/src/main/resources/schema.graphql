@@ -1,0 +1,35 @@
+type Query {
+    topics: [Topic]
+    topic(topic: String): Topic
+    partitionMetaData(topic: String, partition: Int): Partition
+    getOffsets(topic: String, partition: Int): PartitionOffsetInfo
+}
+
+
+type Topic {
+    name: String
+    configs: [Property]
+    partitions: [Partition]
+}
+
+type Property {
+    key: String
+    value: String
+}
+
+type Partition {
+    id: Int
+    leader: Int
+    replicas: [Replica]
+}
+
+type PartitionOffsetInfo {
+    beginning_offset: Int
+    end_offset: Int
+}
+
+type Replica {
+    broker: Int
+    leader: Boolean
+    in_sync: Boolean
+}
