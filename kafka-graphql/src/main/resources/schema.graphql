@@ -3,6 +3,47 @@ type Query {
     topic(topic: String): Topic
     partitionMetaData(topic: String, partition: Int): Partition
     getOffsets(topic: String, partition: Int): PartitionOffsetInfo
+    getSubscriptions(group: String, instance: String): [String]
+    consume(group: String, instance: String): [ConsumedRecord]
+}
+
+type Mutation {
+    produce(topic: String, records: [Record]): [Offset]
+    addConsumer(group: String, consumer: Consumer): ConsumerInfo
+    subscribe(group: String, instance: String, topics: [String]): String # returns void
+}
+
+type ConsumedRecord {
+    topic: String
+    key: String
+    value: String
+    partition: String
+    offset: String
+    # Magic byte (schema)
+}
+
+type ConsumerInfo {
+    instance_id: String
+}
+
+input Consumer {
+    name: String
+    format: String
+    auto_offset_reset: String
+    auto_commit_enable: String
+    fetch_min_bytes: Int
+    request_timeout_ms: Int
+}
+
+type Offset{
+    partition: Int
+    offset: Int
+}
+
+input Record {
+    key: String
+    value: String
+    partition: Int
 }
 
 
@@ -24,6 +65,7 @@ type Partition {
 }
 
 type PartitionOffsetInfo {
+    partition: Int
     beginning_offset: Int
     end_offset: Int
 }
@@ -33,3 +75,12 @@ type Replica {
     leader: Boolean
     in_sync: Boolean
 }
+
+
+
+
+
+
+
+
+

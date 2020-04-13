@@ -75,11 +75,12 @@ public class TopicDataFetchers {
             Integer partition = dataFetchingEnvironment.getArgument("partition");
             if (ctx.getAdminClientWrapper().getTopicPartition(topic, partition) == null)
                 return null;
-            return ImmutableMap.of("beginning_offset", ctx.getKafkaConsumerManager().getBeginningOffset(topic, partition),
+            return ImmutableMap.of("partition", partition,
+                    "beginning_offset", ctx.getKafkaConsumerManager().getBeginningOffset(topic, partition),
                     "end_offset", ctx.getKafkaConsumerManager().getEndOffset(topic, partition));
         };
     }
-    
+
 
     public List<Map<String, String>> getConfigs(Properties properties){
         List<Map<String, String>> propertyList = new ArrayList<>();

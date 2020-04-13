@@ -21,6 +21,10 @@ public class GraphQLProvider {
 
     @Autowired
     TopicDataFetchers topicDataFetchers;
+    @Autowired
+    ProducerDataFetchers producerDataFetchers;
+    @Autowired
+    ConsumerDataFetchers consumerDataFetchers;
 
     private GraphQL graphQL;
 
@@ -49,6 +53,16 @@ public class GraphQLProvider {
                         .dataFetcher("partitionMetaData", topicDataFetchers.getPartitionMetadata()))
                 .type(newTypeWiring("Query")
                         .dataFetcher("getOffsets", topicDataFetchers.getOffsets()))
+                .type(newTypeWiring("Mutation")
+                        .dataFetcher("produce", producerDataFetchers.produce()))
+                .type(newTypeWiring("Mutation")
+                        .dataFetcher("addConsumer", consumerDataFetchers.addConsumer()))
+                .type(newTypeWiring("Mutation")
+                        .dataFetcher("subscribe", consumerDataFetchers.subscribe()))
+                .type(newTypeWiring("Query")
+                        .dataFetcher("getSubscriptions", consumerDataFetchers.getSubscriptions()))
+                .type(newTypeWiring("Query")
+                        .dataFetcher("consume", consumerDataFetchers.consumeBinary()))
                 .build();
     }
 
