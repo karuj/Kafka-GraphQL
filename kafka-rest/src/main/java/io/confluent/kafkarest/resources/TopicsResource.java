@@ -94,6 +94,7 @@ public class TopicsResource {
       @PathParam("topic") String topicName,
       @Valid @NotNull TopicProduceRequest<BinaryTopicProduceRecord> request
   ) {
+    System.out.println("producing: " + request);
     produce(asyncResponse, topicName, EmbeddedFormat.BINARY, request);
   }
 
