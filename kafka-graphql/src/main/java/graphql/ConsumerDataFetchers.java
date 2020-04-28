@@ -7,6 +7,7 @@ import io.confluent.kafkarest.entities.ConsumerInstanceConfig;
 import io.confluent.kafkarest.entities.ConsumerRecord;
 import io.confluent.kafkarest.entities.ConsumerSubscriptionRecord;
 import io.confluent.kafkarest.entities.ConsumerSubscriptionResponse;
+import io.confluent.kafkarest.v2.AvroKafkaConsumerState;
 import io.confluent.kafkarest.v2.BinaryKafkaConsumerState;
 import io.confluent.kafkarest.v2.KafkaConsumerState;
 import io.confluent.rest.RestConfigException;
@@ -79,6 +80,22 @@ public class ConsumerDataFetchers {
             return readRecords(group, instance, timeout, maxBytes, BinaryKafkaConsumerState.class);
         };
     }
+
+    public <ClientKeyT, ClientValueT> DataFetcher consumeAvro(){
+        return dataFetchingEnvironment -> {
+            String group = dataFetchingEnvironment.getArgument("group");
+            String instance = dataFetchingEnvironment.getArgument("instance");
+            long timeout = 3000;
+            long maxBytes = 300000;
+
+            List<? extends ConsumerRecord<ClientKeyT, ClientValueT>> records;
+            List<Map<String, Object>> stuff = readRecords(group, instance, timeout, maxBytes, AvroKafkaConsumerState.class);
+            System.out.println(stuff);
+            return stuff;
+        };
+    }
+
+
     private <KafkaKeyT, KafkaValueT, ClientKeyT, ClientValueT> List<Map<String, Object>> readRecords(
             String group, String instance,
             long timeout, long maxBytes,
@@ -99,8 +116,9 @@ public class ConsumerDataFetchers {
                         records.stream()
                                 .forEach(entry -> records2.add(
                                         ImmutableMap.of("topic", entry.getTopic(),
-                                                "key", entry.getKey() == null ? "null" : new String((byte[]) entry.getKey()),
-                                                "value", new String((byte[]) entry.getValue()),
+                                                // FIX THIS
+                                                "key", entry.getKey() == null ? "null" : entry.getJsonKey(),
+                                                "value", entry.getJsonValue(),
                                                 "partition", entry.getPartition(),
                                                 "offset", entry.getOffset())
                                 ));

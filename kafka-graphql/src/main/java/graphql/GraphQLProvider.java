@@ -2,7 +2,9 @@ package graphql;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.TypeResolver;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
@@ -44,6 +46,7 @@ public class GraphQLProvider {
     }
 
     private RuntimeWiring buildWiring() throws Exception {
+
         return RuntimeWiring.newRuntimeWiring()
                 .type(newTypeWiring("Query")
                         .dataFetcher("topics", topicDataFetchers.getTopics()))
@@ -54,7 +57,9 @@ public class GraphQLProvider {
                 .type(newTypeWiring("Query")
                         .dataFetcher("getOffsets", topicDataFetchers.getOffsets()))
                 .type(newTypeWiring("Mutation")
-                        .dataFetcher("produce", producerDataFetchers.produce()))
+                        .dataFetcher("produceBinary", producerDataFetchers.produceBinary()))
+                .type(newTypeWiring("Mutation")
+                        .dataFetcher("produceAvro", producerDataFetchers.produceAvro()))
                 .type(newTypeWiring("Mutation")
                         .dataFetcher("addConsumer", consumerDataFetchers.addConsumer()))
                 .type(newTypeWiring("Mutation")
@@ -62,8 +67,11 @@ public class GraphQLProvider {
                 .type(newTypeWiring("Query")
                         .dataFetcher("getSubscriptions", consumerDataFetchers.getSubscriptions()))
                 .type(newTypeWiring("Query")
-                        .dataFetcher("consume", consumerDataFetchers.consumeBinary()))
+                        .dataFetcher("consumeBinary", consumerDataFetchers.consumeBinary()))
+                .type(newTypeWiring("Query")
+                        .dataFetcher("consumeAvro", consumerDataFetchers.consumeAvro()))
                 .build();
+
     }
 
     @Bean

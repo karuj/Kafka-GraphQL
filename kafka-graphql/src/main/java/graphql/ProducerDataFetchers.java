@@ -31,7 +31,7 @@ public class ProducerDataFetchers {
         }
     }
 
-    public DataFetcher produce() {
+    public DataFetcher produceBinary() {
         return dataFetchingEnvironment -> {
             String topic = dataFetchingEnvironment.getArgument("topic");
             List<Map<String, Object>> records = dataFetchingEnvironment.getArgument("records");
@@ -94,5 +94,30 @@ public class ProducerDataFetchers {
         };
     }
 
+    public DataFetcher produceAvro() {
+        return dataFetchingEnvironment -> {
+            String topic = dataFetchingEnvironment.getArgument("topic");
+            List<Map<String, Object>> records = dataFetchingEnvironment.getArgument("records");
+            for (Map<String, Object> record : records) {
+                Integer key_schema_id = (Integer) record.get("key_schema_id");
+                Integer value_schema_id = (Integer) record.get("value_schema_id");
+                String key_schema = (String) record.get("key_schema");
+                String value_schema = (String) record.get("key_schema");
+                String key = (String) record.get("key");
+                String value = (String) record.get("value");
+                if (key_schema_id == null){
+                    // schema = key_schema
+                } else {
+                    // schema = registry.get(key_schema_id)
+                }
+                if (value_schema_id == null) {
+                    // schema = value_schema
+                } else {
+                    // schema = registry.get(value_schema)
+                }
+            }
+            return null;
+        };
+    }
 
 }

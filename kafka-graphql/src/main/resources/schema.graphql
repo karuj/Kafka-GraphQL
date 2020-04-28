@@ -4,13 +4,24 @@ type Query {
     partitionMetaData(topic: String, partition: Int): Partition
     getOffsets(topic: String, partition: Int): PartitionOffsetInfo
     getSubscriptions(group: String, instance: String): [String]
-    consume(group: String, instance: String): [ConsumedRecord]
+    consumeBinary(group: String, instance: String): [ConsumedRecord]
+    consumeAvro(group: String, instance: String): [ConsumedRecord]
 }
 
 type Mutation {
-    produce(topic: String, records: [Record]): [Offset]
+    produceBinary(topic: String, records: [Record]): [Offset]
+    produceAvro(topic: String, records: [AvroRecord]): [Offset]
     addConsumer(group: String, consumer: Consumer): ConsumerInfo
-    subscribe(group: String, instance: String, topics: [String]): String # returns void
+    subscribe(group: String, instance: String, topics: [String]): String
+}
+
+input AvroRecord {
+    key_schema: String
+    key_schema_id: Int
+    value_schema: String
+    value_schema_id: Int
+    key: String
+    value: String
 }
 
 type ConsumedRecord {
@@ -19,7 +30,6 @@ type ConsumedRecord {
     value: String
     partition: String
     offset: String
-    # Magic byte (schema)
 }
 
 type ConsumerInfo {
@@ -45,7 +55,6 @@ input Record {
     value: String
     partition: Int
 }
-
 
 type Topic {
     name: String
@@ -75,6 +84,7 @@ type Replica {
     leader: Boolean
     in_sync: Boolean
 }
+
 
 
 
