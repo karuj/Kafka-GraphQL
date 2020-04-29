@@ -10,9 +10,14 @@ type Query {
 
 type Mutation {
     produceBinary(topic: String, records: [Record]): [Offset]
-    produceAvro(topic: String, records: [AvroRecord]): [Offset]
+    produceAvro(topic: String, records: [AvroRecord]): [SchemaInfo]
     addConsumer(group: String, consumer: Consumer): ConsumerInfo
     subscribe(group: String, instance: String, topics: [String]): String
+}
+
+type SchemaInfo {
+    keyId: Int
+    valueId: Int
 }
 
 input AvroRecord {
