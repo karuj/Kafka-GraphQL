@@ -2,6 +2,8 @@
 
 A GraphQL interface to control a Kafka cluster.
 
+To run the project, build it from maven, and run the GraphQLMain.java file. 
+
 ## Current list of supported operations
 * **topics**  
 Returns names for all topics in the cluster
