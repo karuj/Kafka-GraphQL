@@ -1,6 +1,6 @@
 ### GraphQL API for Kafka
 
-Implementing a GraphQL API to communicate with the kafka cluster
+A GraphQL interface to control a Kafka cluster.
 
 ## Current list of supported operations
 * **topics**  
